@@ -1,0 +1,10 @@
+.DS_Store
+*.swp
+*.swo
+*~
+.obsidian/workspace.json
+.obsidian/plugins/*/data.json
+.obsidian/cache/
+node_modules/
+output/
+temp_analysis/
