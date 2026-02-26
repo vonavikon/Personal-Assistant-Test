@@ -1,4 +1,4 @@
-# Пользовательские данные vault
+# Пользовательские данные vault (создаются при /init)
 00_CORE/
 10_PEOPLE/
 20_MEETINGS/
@@ -8,9 +8,10 @@
 60_DOMAIN/
 70_ARCHIVES/
 80_PERSONAL/
+90_TEMPLATES/
 99_ARCHIVE/
 
-# Конфиги с персональными данными
+# Персональные конфиги
 CLAUDE.md
 AGENTS.md
 Dashboard.md
@@ -25,3 +26,7 @@ Dashboard.md
 # Временные файлы
 Untitled*
 *.tmp
+
+# OS
+.DS_Store
+Thumbs.db
