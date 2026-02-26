@@ -25,16 +25,24 @@
 
 ## Быстрый старт
 
+### Вариант 1: Одной командой
+
+Откройте Claude Code в любой пустой папке и выполните в Bash:
+
 ```bash
-mkdir my-vault && cd my-vault
 git clone https://github.com/vonavikon/Personal-Assistant-Test.git .
-code .
 ```
 
-В Claude Code выполните:
+Затем в чате Claude Code:
 ```
 /init
 ```
+
+### Вариант 2: GitHub
+
+1. Откройте https://github.com/vonavikon/Personal-Assistant-Test
+2. Нажмите "Use this template" → "Open in VS Code"
+3. Запустите `/init` в Claude Code
 
 ## Доступные команды
 
