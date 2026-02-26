@@ -25,30 +25,31 @@
 
 ## Быстрый старт
 
-### Вариант 1: Одной командой
-
-Откройте Claude Code в любой пустой папке и выполните в Bash:
+### Установка за 1 минуту
 
 ```bash
+# 1. Создайте папку и перейдите в неё
+mkdir my-vault && cd my-vault
+
+# 2. Клонируйте репозиторий
 git clone https://github.com/vonavikon/Personal-Assistant-Test.git .
+
+# 3. Откройте в VS Code
+code .
 ```
 
-Затем в чате Claude Code:
+Затем в чате Claude Code скажите:
 ```
-/install-vault
+запусти установку
 ```
 
-### Вариант 2: GitHub
-
-1. Откройте https://github.com/vonavikon/Personal-Assistant-Test
-2. Нажмите "Use this template" → "Open in VS Code"
-3. Запустите `/install-vault` в Claude Code
+Всё! Claude проведёт интервью, создаст структуру vault и настроит интеграции.
 
 ## Доступные команды
 
 | Команда | Описание |
 |---------|----------|
-| `/install-vault` | Настройка vault с ktalk и QMD |
+| `запусти установку` | Настройка vault с ktalk и QMD |
 | `/process-transcript` | Обработать транскрипт из ktalk |
 | `/find-person` | Поиск информации о человеке |
 | `/new-1-1` | Создать протокол 1-1 |
@@ -80,8 +81,8 @@ Johnny Decimal:
 ### Настройка
 
 1. Получите API ключ: https://naomi.nau.im/ → Профиль → Настройки → API ключ
-2. Запустите `/install-vault` и выберите "Подключить Naomi Talk"
-3. Вставьте токен
+2. Запустите установку (`запусти установку`) и выберите "Подключить Naomi Talk"
+3. Вставьте токен в `.mcp.json`
 
 ### Конфигурация `.mcp.json`
 
@@ -103,7 +104,7 @@ Johnny Decimal:
 
 ## QMD — Семантический поиск
 
-Автоматически настраивается при `/install-vault`.
+Автоматически настраивается при установке.
 
 ```bash
 npm install -g @tobilu/qmd
