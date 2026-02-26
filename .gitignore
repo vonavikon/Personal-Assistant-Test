@@ -1,10 +1,27 @@
-.DS_Store
-*.swp
-*.swo
-*~
-.obsidian/workspace.json
-.obsidian/plugins/*/data.json
-.obsidian/cache/
-node_modules/
-output/
-temp_analysis/
+# Пользовательские данные vault
+00_CORE/
+10_PEOPLE/
+20_MEETINGS/
+30_PROJECTS/
+40_DECISIONS/
+50_KNOWLEDGE/
+60_DOMAIN/
+70_ARCHIVES/
+80_PERSONAL/
+99_ARCHIVE/
+
+# Конфиги с персональными данными
+CLAUDE.md
+AGENTS.md
+Dashboard.md
+.mcp.json
+.claude/settings.local.json
+
+# Obsidian
+.obsidian/
+*.canvas
+*.base
+
+# Временные файлы
+Untitled*
+*.tmp
