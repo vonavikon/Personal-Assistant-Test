@@ -26,8 +26,8 @@
 ## Быстрый старт
 
 ```bash
-git clone https://github.com/vonavikon/Personal-Assistant-Test.git my-vault
-cd my-vault
+mkdir my-vault && cd my-vault
+git clone https://github.com/vonavikon/Personal-Assistant-Test.git .
 code .
 ```
 
