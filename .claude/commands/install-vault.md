@@ -210,12 +210,10 @@ tags:
 {
   "mcpServers": {
     "ktalk": {
-      "transport": {
-        "type": "http",
-        "url": "https://ktalk.ai-office.nau.team/mcp",
-        "headers": {
-          "Authorization": "Bearer <ВСТАВЬТЕ_ВАШ_API_КЛЮЧ_ТУДА>"
-        }
+      "type": "http",
+      "url": "https://ktalk.ai-office.nau.team/mcp",
+      "headers": {
+        "Authorization": "Bearer <ВАШ КЛЮЧ ИЗ NAOMI>"
       }
     }
   }
