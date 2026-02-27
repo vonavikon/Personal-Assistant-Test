@@ -19,14 +19,7 @@
 ## Быстрый старт
 
 ```bash
-# 1. Создайте папку и перейдите в неё
-mkdir my-vault && cd my-vault
-
-# 2. Клонируйте репозиторий
-git clone https://github.com/vonavikon/Personal-Assistant-Test.git .
-
-# 3. Откройте в Cursor
-cursor .
+git clone https://github.com/vonavikon/Personal-Assistant-Test.git my-vault && cd my-vault && cursor .
 ```
 
 Затем в чате Claude Code:
