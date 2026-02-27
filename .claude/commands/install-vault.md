@@ -159,6 +159,36 @@ cp templates/frontmatter-guide.md 90_TEMPLATES/ 2>/dev/null || true
 echo "✓ Шаблоны скопированы"
 ```
 
+### Создание словаря терминов
+
+Создайте файл `50_KNOWLEDGE/glossary.md`:
+
+```markdown
+---
+type: knowledge
+id: glossary
+title: "Словарь терминов"
+status: active
+tags:
+  - glossary
+  - reference
+---
+
+# Словарь терминов
+
+Термины и сокращения, встречающиеся в работе.
+
+| Термин | Расшифровка | Контекст | Добавлен |
+|--------|-------------|----------|----------|
+| | | | |
+
+---
+
+## Как добавлять термины
+
+При обработке встреч ассистент автоматически предлагает добавить неизвестные термины в этот словарь.
+```
+
 ---
 
 ## Шаг 6: Создание .mcp.json
@@ -420,42 +450,161 @@ graph TD
 
 ---
 
-## Шаг 11: Настройка QMD ВЫПОЛНИТЬ BASH
+## Шаг 10.5: Проверка зависимостей для QMD (Windows)
+
+> **Примечание:** Этот шаг только для Windows. На Mac/Linux пропустите его.
 
 ```
-🔍 Настраиваю QMD...
+🔍 Проверяю зависимости для QMD...
 ```
 
-Проверьте Node.js:
+Выполните проверку зависимостей:
 
 ```bash
-node --version
+powershell.exe -Command '
+$missing = @()
+
+# Проверка Node.js
+try {
+    $nodeVersion = node --version 2>$null
+    Write-Host "[OK] Node.js: $nodeVersion" -ForegroundColor Green
+} catch {
+    Write-Host "[ОТСУТСТВУЕТ] Node.js" -ForegroundColor Red
+    $missing += "nodejs"
+}
+
+# Проверка Python
+try {
+    $pythonVersion = python --version 2>$null
+    Write-Host "[OK] Python: $pythonVersion" -ForegroundColor Green
+} catch {
+    Write-Host "[ОТСУТСТВУЕТ] Python" -ForegroundColor Red
+    $missing += "python"
+}
+
+# Проверка VS Build Tools
+$vsWhere = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+$buildTools = $false
+if (Test-Path $vsWhere) {
+    $buildTools = & $vsWhere -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath 2>$null
+}
+if ($buildTools) {
+    Write-Host "[OK] VS Build Tools установлены" -ForegroundColor Green
+} else {
+    Write-Host "[ОТСУТСТВУЕТ] VS Build Tools" -ForegroundColor Red
+    $missing += "vsbuildtools"
+}
+
+# Установка отсутствующих компонентов
+if ($missing.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Обнаружены отсутствующие зависимости. Устанавливаю..." -ForegroundColor Yellow
+    Write-Host ""
+
+    $wingetAvailable = Get-Command winget -ErrorAction SilentlyContinue
+
+    if ($wingetAvailable) {
+        Write-Host "Использую winget для установки. Может потребоваться подтверждение UAC." -ForegroundColor Yellow
+        Write-Host ""
+
+        if ($missing -contains "nodejs") {
+            Write-Host "Установка Node.js LTS..." -ForegroundColor Cyan
+            $result = winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "Ошибка установки Node.js: $result" -ForegroundColor Red
+            }
+        }
+
+        if ($missing -contains "python") {
+            Write-Host "Установка Python 3.12..." -ForegroundColor Cyan
+            $result = winget install Python.Python.3.12 --accept-source-agreements --accept-package-agreements 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "Ошибка установки Python: $result" -ForegroundColor Red
+            }
+        }
+
+        if ($missing -contains "vsbuildtools") {
+            Write-Host "Установка VS Build Tools..." -ForegroundColor Cyan
+            Write-Host "ВАЖНО: В установщике выберите `"Разработка классических приложений на C++`"" -ForegroundColor Yellow
+            $result = winget install Microsoft.VisualStudio.2022.BuildTools --override "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended" --accept-source-agreements 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "Ошибка установки VS Build Tools: $result" -ForegroundColor Red
+            }
+        }
+
+        Write-Host ""
+        Write-Host "Установка завершена. Перезапустите терминал и выполните /install-vault снова." -ForegroundColor Green
+    } else {
+        Write-Host "winget недоступен. Установите вручную:" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "1. Node.js: https://nodejs.org/ (LTS версия)" -ForegroundColor White
+        Write-Host "2. Python: https://www.python.org/downloads/ (3.12+)" -ForegroundColor White
+        Write-Host "3. VS Build Tools: https://visualstudio.microsoft.com/visual-cpp-build-tools/" -ForegroundColor White
+        Write-Host "   (выберите `"Разработка классических приложений на C++`")" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host "После установки перезапустите терминал и выполните /install-vault снова." -ForegroundColor Yellow
+    }
+} else {
+    Write-Host ""
+    Write-Host "Все зависимости установлены. Продолжаю настройку..." -ForegroundColor Green
+}
+'
 ```
 
-Если нет:
+Если зависимости были установлены, попросите пользователя перезапустить терминал и выполнить `/install-vault` снова.
+
+---
+
+## Шаг 11: Установка QMD
+
 ```
-⚠️ Node.js не найден. Установите с https://nodejs.org/
+📦 Устанавливаю QMD...
 ```
 
-Если есть:
+Выполните через Bash tool:
 
 ```bash
-npm install -g @tobilu/qmd
+# Проверка Node.js
+if ! command -v node &>/dev/null; then
+    echo "Node.js не установлен"
+    echo "На Windows: зависимости должны были установиться на предыдущем шаге"
+    echo "На Mac/Linux: установите Node.js 18+ с https://nodejs.org"
+    exit 1
+fi
+
+# Установка QMD
+if command -v qmd &>/dev/null; then
+    echo "QMD уже установлен ($(qmd --version 2>/dev/null || echo 'unknown'))"
+else
+    npm install -g @tobilu/qmd
+    if command -v qmd &>/dev/null; then
+        echo "QMD установлен успешно"
+    else
+        echo "Ошибка установки QMD"
+        exit 1
+    fi
+fi
 ```
 
-```bash
-qmd collection add ./10_PEOPLE --name vault-people --mask "*.md"
-qmd collection add ./30_PROJECTS --name vault-projects --mask "*.md"
-qmd collection add ./20_MEETINGS --name vault-meetings --mask "*.md"
-qmd collection add ./00_CORE --name vault-core --mask "*.md"
-qmd collection add ./40_DECISIONS --name vault-decisions --mask "*.md"
-qmd collection add ./50_KNOWLEDGE --name vault-knowledge --mask "*.md"
-qmd collection add ./60_DOMAIN --name vault-domain --mask "*.md"
-```
+Если установка прошла успешно:
 
 ```bash
-qmd update
-qmd embed
+qmd collection add ./10_PEOPLE --name vault-people --mask "*.md" 2>/dev/null || true
+qmd collection add ./30_PROJECTS --name vault-projects --mask "*.md" 2>/dev/null || true
+qmd collection add ./20_MEETINGS --name vault-meetings --mask "*.md" 2>/dev/null || true
+qmd collection add ./00_CORE --name vault-core --mask "*.md" 2>/dev/null || true
+qmd collection add ./40_DECISIONS --name vault-decisions --mask "*.md" 2>/dev/null || true
+qmd collection add ./50_KNOWLEDGE --name vault-knowledge --mask "*.md" 2>/dev/null || true
+qmd collection add ./60_DOMAIN --name vault-domain --mask "*.md" 2>/dev/null || true
+
+qmd update 2>/dev/null || true
+qmd embed 2>/dev/null || true
+```
+
+Если QMD не установился:
+```
+⚠️ QMD не установлен. Можно установить позже командой:
+   npm install -g @tobilu/qmd
 ```
 
 ---
@@ -509,6 +658,8 @@ echo "✓ Skills установлены: meeting-debrief, correspondence-2, meet
 ## Интеграции:
 🔗 MCP ktalk: {статус}
 🔍 QMD: {статус}
+   • Если "✓ установлен" — готов к использованию
+   • Если "⚠️ требует настройки" — выполните `/install-vault` после установки Node.js
 📦 Skills: meeting-debrief, correspondence-2, meeting-prep
 
 ## Доступные команды:

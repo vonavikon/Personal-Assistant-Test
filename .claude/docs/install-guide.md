@@ -12,6 +12,15 @@
 | **Claude Code** | Последняя | MCP + команды |
 | **Node.js 18+** | — | QMD (опционально) |
 
+### Windows-специфичные требования (для QMD)
+
+| Компонент | Для чего | Автоустановка |
+|-----------|----------|---------------|
+| **Visual Studio Build Tools** | Компиляция нативных модулей | Да (winget) |
+| **Python 3.x** | node-gyp | Да (winget) |
+
+При `/install-vault` на Windows автоматически проверяются и устанавливаются недостающие компоненты через winget с запросом прав администратора.
+
 ---
 
 ## Быстрый старт
@@ -163,6 +172,18 @@ ID = {первая_буква_имени}{фамилия_транслит}
 ---
 
 ## Troubleshooting
+
+### Проблема: QMD не устанавливается на Windows (gyp ERR!)
+
+**Причина:** Отсутствуют Visual Studio Build Tools или Python.
+
+**Решение:**
+1. Запустите `/install-vault` — автоматически установит зависимости
+2. Если не сработало — установите вручную:
+   - [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (workload: Desktop development with C++)
+   - [Python 3.12](https://www.python.org/downloads/) (отметьте "Add Python to PATH")
+3. Перезапустите VS Code
+4. Выполните: `npm install -g @tobilu/qmd`
 
 ### Проблема: ktalk не подключается
 
